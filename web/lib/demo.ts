@@ -104,3 +104,56 @@ export const DEMO_UNDERLYING_LIST: ReadonlyArray<{
     name: "Spark Savings DAI",
   },
 ];
+
+export interface PerfPoint {
+  ts: number;
+  /** share price expressed in USDC, e.g. 1.0234 */
+  sharePrice: number;
+}
+
+export interface ApyPoint {
+  ts: number;
+  /** percentage points, e.g. 5.42 */
+  apy: number;
+}
+
+/**
+ * Deterministic-ish share price series. Slow upward drift around ~5% APY,
+ * minor jitter so the line looks alive. Latest point sits at index 0.
+ */
+export function demoSharePriceSeries(
+  points = 48,
+  intervalMs = 60 * 60 * 1000, // hourly
+): PerfPoint[] {
+  const now = Date.now();
+  const apyPerSec = 0.05 / (365 * 24 * 60 * 60);
+  const totalSeconds = (points - 1) * (intervalMs / 1000);
+  const startPrice = 1 / (1 + apyPerSec * totalSeconds);
+  const out: PerfPoint[] = [];
+  for (let i = points - 1; i >= 0; i--) {
+    const elapsedSec = (points - 1 - i) * (intervalMs / 1000);
+    const drift = startPrice * (1 + apyPerSec * elapsedSec);
+    const jitter = Math.sin(i * 0.71 + 0.13) * 0.00012;
+    const sharePrice = +(drift + jitter).toFixed(6);
+    out.push({ ts: now - i * intervalMs, sharePrice });
+  }
+  return out;
+}
+
+/**
+ * Blended target APY series. Hovers around 4.5–5.8% with a subtle wave.
+ */
+export function demoApySeries(
+  points = 48,
+  intervalMs = 60 * 60 * 1000, // hourly
+): ApyPoint[] {
+  const now = Date.now();
+  const out: ApyPoint[] = [];
+  for (let i = points - 1; i >= 0; i--) {
+    const wave = Math.sin(i * 0.42 + 1.1) * 0.6;
+    const microNoise = Math.sin(i * 1.91) * 0.18;
+    const apy = +(5.1 + wave + microNoise).toFixed(2);
+    out.push({ ts: now - i * intervalMs, apy });
+  }
+  return out;
+}

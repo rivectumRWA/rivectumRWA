@@ -20,6 +20,7 @@ web/.next/
 # design / review artifacts (regeneratable)
 dashboard-*.png
 crotafi-dashboard.png
+vault-page-*.png
 
 # os
 .DS_Store

@@ -5,6 +5,8 @@ import { KpiStrip } from "@/components/KpiStrip";
 import { DepositCard } from "@/components/DepositCard";
 import { WithdrawCard } from "@/components/WithdrawCard";
 import { AllocationCard } from "@/components/AllocationCard";
+import { PerformanceCard } from "@/components/PerformanceCard";
+import { ApyCard } from "@/components/ApyCard";
 import { ActivityCard } from "@/components/ActivityCard";
 import { StrategyCard } from "@/components/StrategyCard";
 import { ContractCard } from "@/components/ContractCard";
@@ -27,27 +29,37 @@ export default function Home() {
             <KpiStrip />
           </div>
 
-          {/* Section 1: VAULT — deposit dominant (2-col), withdraw + allocation as supports */}
+          {/* Section 1: VAULT — deposit + performance on the left, withdraw + allocation on the right */}
           <SectionLabel title="vault" />
           <section className="mt-3 grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
-            <DepositCard featured className="lg:col-span-2" />
+            <div className="lg:col-span-2 grid gap-3">
+              <DepositCard featured />
+              <PerformanceCard />
+            </div>
             <div className="grid gap-3">
               <WithdrawCard />
               <AllocationCard />
             </div>
           </section>
 
-          {/* Section 2: AGENT — telemetry & strategy spec */}
+          {/* Section 2: AGENT — apy + strategy in a 2/1 split, activity full-width below */}
           <SectionLabel title="agent" />
           <section className="mt-3 grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
-            <ActivityCard />
+            <div className="lg:col-span-2">
+              <ApyCard />
+            </div>
             <StrategyCard />
+          </section>
+          <section className="mt-3">
+            <ActivityCard />
           </section>
 
           {/* Section 3: REGISTRY — underlyings + contracts */}
           <SectionLabel title="registry" />
           <section className="mt-3 grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
-            <UnderlyingsCard />
+            <div className="lg:col-span-2">
+              <UnderlyingsCard />
+            </div>
             <ContractCard />
           </section>
 

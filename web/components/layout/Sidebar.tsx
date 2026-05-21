@@ -8,24 +8,35 @@ import {
   ShieldCheck,
   Wallet,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { clsx } from "@/lib/clsx";
 
-const NAV: ReadonlyArray<{
+interface NavItem {
   id: string;
   label: string;
   icon: typeof LayoutDashboard;
-  active?: boolean;
-}> = [
-  { id: "overview", label: "overview", icon: LayoutDashboard, active: true },
-  { id: "vault", label: "vault", icon: Vault },
+  href?: string;
+}
+
+const NAV: ReadonlyArray<NavItem> = [
+  { id: "overview", label: "overview", icon: LayoutDashboard, href: "/" },
+  { id: "vault", label: "vault", icon: Vault, href: "/vault" },
   { id: "allocations", label: "allocations", icon: PieChart },
   { id: "activity", label: "activity", icon: Activity },
   { id: "strategy", label: "strategy", icon: ScrollText },
   { id: "settings", label: "settings", icon: ShieldCheck },
 ];
 
+function isItemActive(item: NavItem, pathname: string): boolean {
+  if (!item.href) return false;
+  if (item.href === "/") return pathname === "/";
+  return pathname === item.href || pathname.startsWith(`${item.href}/`);
+}
+
 export function Sidebar() {
+  const pathname = usePathname() ?? "/";
   return (
     <aside className="hidden lg:flex w-60 shrink-0 border-r border-border bg-bg-elevated flex-col h-screen sticky top-0">
       <div className="px-5 py-5 border-b border-border">
@@ -46,29 +57,47 @@ export function Sidebar() {
         <ul className="px-2 space-y-0.5">
           {NAV.map((item) => {
             const Icon = item.icon;
-            const isActive = item.active;
+            const enabled = !!item.href;
+            const isActive = enabled && isItemActive(item, pathname);
+            const baseClasses = clsx(
+              "group w-full flex items-center gap-2.5 h-9 px-3 rounded-md text-sm relative transition-colors duration-150",
+              isActive
+                ? "text-surface font-medium bg-text"
+                : enabled
+                  ? "text-text hover:bg-surface-muted"
+                  : "text-text-subtle cursor-not-allowed",
+            );
+            const inner = (
+              <>
+                <Icon size={16} strokeWidth={1.5} />
+                <span className="lowercase">{item.label}</span>
+                {!enabled && (
+                  <span className="ml-auto text-[10px] text-text-subtle uppercase tracking-[0.08em]">
+                    soon
+                  </span>
+                )}
+              </>
+            );
             return (
               <li key={item.id}>
-                <button
-                  type="button"
-                  disabled={!isActive}
-                  className={clsx(
-                    "group w-full flex items-center gap-2.5 h-9 px-3 rounded-md text-sm relative transition-colors duration-150",
-                    isActive
-                      ? "text-surface font-medium bg-text"
-                      : "text-text-subtle hover:text-text-muted cursor-not-allowed",
-                  )}
-                  aria-current={isActive ? "page" : undefined}
-                  title={!isActive ? "coming soon" : undefined}
-                >
-                  <Icon size={16} strokeWidth={1.5} />
-                  <span className="lowercase">{item.label}</span>
-                  {!isActive && (
-                    <span className="ml-auto text-[10px] text-text-subtle uppercase tracking-[0.08em]">
-                      soon
-                    </span>
-                  )}
-                </button>
+                {enabled ? (
+                  <Link
+                    href={item.href!}
+                    aria-current={isActive ? "page" : undefined}
+                    className={baseClasses}
+                  >
+                    {inner}
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    disabled
+                    className={baseClasses}
+                    title="coming soon"
+                  >
+                    {inner}
+                  </button>
+                )}
               </li>
             );
           })}
