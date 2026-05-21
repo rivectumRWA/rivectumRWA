@@ -1,0 +1,21 @@
+# build
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+agent/node_modules/
+agent/dist/
+agent/*.db
+agent/*.db-*
+web/node_modules/
+web/.next/
+
+# secrets
+**/.env
+!**/.env.example
+
+# session
+.sisyphus/
+
+# os
+.DS_Store
+Thumbs.db
