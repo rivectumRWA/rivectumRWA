@@ -13,8 +13,13 @@ web/.next/
 **/.env
 !**/.env.example
 
-# session
+# session / agent scratch
 .sisyphus/
+.playwright-mcp/
+
+# design / review artifacts (regeneratable)
+dashboard-*.png
+crotafi-dashboard.png
 
 # os
 .DS_Store
