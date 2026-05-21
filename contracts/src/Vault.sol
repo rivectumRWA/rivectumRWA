@@ -182,6 +182,16 @@ contract Vault is ERC4626, Ownable, ReentrancyGuard {
         return idle + deployed;
     }
 
+    /// @notice Number of whitelisted underlying vaults.
+    function underlyingsCount() external view returns (uint256) {
+        return underlyings.length;
+    }
+
+    /// @notice Full list of whitelisted underlying vaults (registry view).
+    function getUnderlyings() external view returns (address[] memory) {
+        return underlyings;
+    }
+
     /// @notice Owner-only: redeem all shares from underlyings back into the vault as USDC.
     /// @dev Use with `setPaused(true)` for full emergency stop.
     function emergencyWithdrawAll() external onlyOwner {
