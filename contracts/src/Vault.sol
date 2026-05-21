@@ -5,6 +5,8 @@ import {ERC4626, IERC20} from "@openzeppelin/contracts/token/ERC20/extensions/ER
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 /// @title Agent RWA Vault
 /// @notice ERC-4626 USDC vault rebalanced by an off-chain agent via signed intents.
@@ -81,5 +83,37 @@ contract Vault is ERC4626, Ownable, ReentrancyGuard {
         emit Paused(p);
     }
 
-    // rebalance + _execute + _hashIntent + _verify implemented in later tasks
+    /// @notice Compute the digest signed by the agent. Domain-separated by chainid + vault address.
+    function hashIntent(Intent calldata intent) external view returns (bytes32) {
+        return _hashIntent(intent);
+    }
+
+    function _hashIntent(Intent calldata intent) internal view returns (bytes32) {
+        bytes memory packed;
+        for (uint256 i = 0; i < intent.allocations.length; i++) {
+            packed = abi.encodePacked(
+                packed,
+                intent.allocations[i].asset,
+                intent.allocations[i].bps
+            );
+        }
+        bytes32 allocsHash = keccak256(packed);
+        return keccak256(
+            abi.encode(
+                block.chainid,
+                address(this),
+                intent.nonce,
+                intent.deadline,
+                allocsHash
+            )
+        );
+    }
+
+    function _verify(bytes32 digest, bytes calldata sig) internal view returns (bool) {
+        bytes32 ethSigned = MessageHashUtils.toEthSignedMessageHash(digest);
+        address recovered = ECDSA.recover(ethSigned, sig);
+        return recovered == agentDid;
+    }
+
+    // rebalance + _execute implemented in later tasks
 }
