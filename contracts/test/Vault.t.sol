@@ -94,4 +94,85 @@ contract VaultTest is Test {
         bytes32 h2 = vault.hashIntent(i);
         assertEq(h1, h2);
     }
+
+    function test_rebalance_happy_path() public {
+        vm.startPrank(user);
+        usdc.approve(address(vault), 100e6);
+        vault.deposit(100e6, user);
+        vm.stopPrank();
+
+        Vault.Intent memory intent = _makeIntent(5000, 4000); // 90% allocated, 10% idle
+        (bytes memory sig,) = _signIntent(intent);
+
+        vault.rebalance(intent, sig);
+
+        assertGt(under1.balanceOf(address(vault)), 0);
+        assertGt(under2.balanceOf(address(vault)), 0);
+        assertApproxEqAbs(usdc.balanceOf(address(vault)), 10e6, 1);
+        assertEq(vault.nextNonce(), 1);
+    }
+
+    function test_rebalance_rejects_bad_sig() public {
+        Vault.Intent memory intent = _makeIntent(5000, 4000);
+        bytes memory badSig = new bytes(65);
+        // ECDSA.recover reverts with custom error on length-65 zeros (signature S=0).
+        // Either revert path is acceptable; the call must not execute.
+        vm.expectRevert();
+        vault.rebalance(intent, badSig);
+    }
+
+    function test_rebalance_rejects_replay() public {
+        vm.startPrank(user);
+        usdc.approve(address(vault), 100e6);
+        vault.deposit(100e6, user);
+        vm.stopPrank();
+
+        Vault.Intent memory intent = _makeIntent(5000, 4000);
+        (bytes memory sig,) = _signIntent(intent);
+        vault.rebalance(intent, sig);
+        vm.expectRevert(Vault.BadNonce.selector);
+        vault.rebalance(intent, sig);
+    }
+
+    function test_rebalance_rejects_expired() public {
+        Vault.Intent memory intent = _makeIntent(5000, 4000);
+        intent.deadline = uint64(block.timestamp - 1);
+        (bytes memory sig,) = _signIntent(intent);
+        vm.expectRevert(Vault.Expired.selector);
+        vault.rebalance(intent, sig);
+    }
+
+    function test_rebalance_enforces_cap() public {
+        Vault.Intent memory intent = _makeIntent(7000, 3000); // 70% > 60% cap
+        (bytes memory sig,) = _signIntent(intent);
+        vm.expectRevert(Vault.CapExceeded.selector);
+        vault.rebalance(intent, sig);
+    }
+
+    function test_pause_blocks_rebalance() public {
+        vm.prank(owner);
+        vault.setPaused(true);
+        Vault.Intent memory intent = _makeIntent(5000, 4000);
+        (bytes memory sig,) = _signIntent(intent);
+        vm.expectRevert(Vault.PausedErr.selector);
+        vault.rebalance(intent, sig);
+    }
+
+    function test_emergency_withdraw_all() public {
+        vm.startPrank(user);
+        usdc.approve(address(vault), 100e6);
+        vault.deposit(100e6, user);
+        vm.stopPrank();
+
+        Vault.Intent memory intent = _makeIntent(5000, 4000);
+        (bytes memory sig,) = _signIntent(intent);
+        vault.rebalance(intent, sig);
+
+        vm.prank(owner);
+        vault.emergencyWithdrawAll();
+
+        assertEq(under1.balanceOf(address(vault)), 0);
+        assertEq(under2.balanceOf(address(vault)), 0);
+        assertGt(usdc.balanceOf(address(vault)), 99e6);
+    }
 }
