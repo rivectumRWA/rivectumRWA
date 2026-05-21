@@ -1,12 +1,29 @@
 import { Providers } from "./providers";
 import type { ReactNode } from "react";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import "./globals.css";
 
-export const metadata = { title: "Agent RWA Vault" };
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-jetbrains",
+});
+
+export const metadata = {
+  title: "agent rwa vault",
+  description: "Autonomous ERC-4626 vault rebalancer on Base Sepolia.",
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body style={{ margin: 0, fontFamily: "system-ui, sans-serif" }}>
+    <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>

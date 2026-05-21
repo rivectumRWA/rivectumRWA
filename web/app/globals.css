@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #f7f6f1;
+  --color-bg-elevated: #fafaf7;
+  --color-surface: #ffffff;
+  --color-surface-muted: #fbfaf6;
+  --color-border: #d8d6cc;
+  --color-border-strong: #000000;
+  --color-text: #050505;
+  --color-text-muted: #5f666a;
+  --color-text-subtle: #8a8a82;
+  --color-accent: #b6f42c;
+  --color-accent-hover: #a8e618;
+  --color-danger: #b23a2f;
+  --color-warning: #b77b1e;
+  --color-info: #1e5bb7;
+  --color-success: #2f8c4a;
+  --color-risk-low: #a86a12;
+  --color-risk-med: #b77b1e;
+  --color-risk-high: #b23a2f;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --tracking-microlabel: 0.08em;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+.font-mono,
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* corner glyphs for cards (subtle, only TR + BL) */
+.card-glyph {
+  position: relative;
+}
+.card-glyph > .glyph-tr,
+.card-glyph > .glyph-bl {
+  position: absolute;
+  font-size: 9px;
+  color: var(--color-border);
+  line-height: 1;
+  font-family: var(--font-mono);
+  pointer-events: none;
+  user-select: none;
+}
+.card-glyph > .glyph-tr {
+  top: 7px;
+  right: 8px;
+}
+.card-glyph > .glyph-bl {
+  bottom: 7px;
+  left: 8px;
+}
+
+/* microlabel utility */
+.microlabel {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-microlabel);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* focus ring tokens */
+:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
