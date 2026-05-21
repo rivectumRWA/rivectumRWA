@@ -17,7 +17,14 @@ interface Row {
   error_msg: string | null;
 }
 
-export async function GET() {
+const ALLOWED_STATUSES = new Set(["success", "failed", "pending"]);
+
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const status = url.searchParams.get("status");
+  const limitParam = url.searchParams.get("limit");
+  const limit = clampLimit(limitParam);
+
   const dbPath =
     process.env.AGENT_DB_PATH ??
     path.join(process.cwd(), "..", "agent", "agent.db");
@@ -29,11 +36,12 @@ export async function GET() {
   try {
     const db = new Database(dbPath, { readonly: true, fileMustExist: true });
     try {
-      const rows = db
-        .prepare(
-          "SELECT id, ts, intent_hash, nonce, allocations_json, tx_hash, status, error_msg FROM decisions ORDER BY id DESC LIMIT 50"
-        )
-        .all() as Row[];
+      const where =
+        status && ALLOWED_STATUSES.has(status) ? "WHERE status = ?" : "";
+      const sql = `SELECT id, ts, intent_hash, nonce, allocations_json, tx_hash, status, error_msg FROM decisions ${where} ORDER BY id DESC LIMIT ?`;
+      const args =
+        status && ALLOWED_STATUSES.has(status) ? [status, limit] : [limit];
+      const rows = db.prepare(sql).all(...args) as Row[];
       return NextResponse.json(
         rows.map((r) => ({
           id: r.id,
@@ -52,4 +60,10 @@ export async function GET() {
   } catch {
     return NextResponse.json([]);
   }
+}
+
+function clampLimit(v: string | null): number {
+  const n = v ? Number(v) : 50;
+  if (!Number.isFinite(n) || n <= 0) return 50;
+  return Math.min(Math.floor(n), 500);
 }

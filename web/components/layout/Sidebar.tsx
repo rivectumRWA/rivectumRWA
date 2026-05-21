@@ -24,7 +24,7 @@ const NAV: ReadonlyArray<NavItem> = [
   { id: "overview", label: "overview", icon: LayoutDashboard, href: "/" },
   { id: "vault", label: "vault", icon: Vault, href: "/vault" },
   { id: "allocations", label: "allocations", icon: PieChart },
-  { id: "activity", label: "activity", icon: Activity },
+  { id: "activity", label: "activity", icon: Activity, href: "/activity" },
   { id: "strategy", label: "strategy", icon: ScrollText },
   { id: "settings", label: "settings", icon: ShieldCheck },
 ];
