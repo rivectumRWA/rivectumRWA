@@ -1,6 +1,6 @@
-# Agent RWA Vault — Hackathon Demo
+# SerraRWA — Hackathon Demo
 
-ERC-4626 USDC vault on Base Sepolia. An off-chain TypeScript agent rebalances across two ERC-4626 underlyings via signed intents, with a Next.js dashboard.
+SerraRWA is an autonomous RWA allocation demo on Base Sepolia. An off-chain TypeScript agent rebalances an ERC-4626 USDC vault across two ERC-4626 underlyings via signed intents, with a Next.js dashboard.
 
 > ⚠️ Unaudited demo. Base Sepolia testnet only. Do not deposit real funds.
 

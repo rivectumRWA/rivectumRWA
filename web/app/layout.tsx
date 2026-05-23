@@ -16,8 +16,8 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "agent rwa vault",
-  description: "Autonomous ERC-4626 vault rebalancer on Base Sepolia.",
+  title: "SerraRWA",
+  description: "Autonomous RWA allocation protocol on Base Sepolia.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

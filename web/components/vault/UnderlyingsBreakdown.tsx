@@ -1,10 +1,20 @@
 "use client";
-import { Layers } from "lucide-react";
+import { Layers, Building2, Landmark, Home, CreditCard, Shield, Coins } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { useVaultSnapshot } from "@/lib/useVaultSnapshot";
+import { lookupRwaMeta } from "@/lib/rwa-registry";
 import { Address } from "./AddressLink";
 import { clsx } from "@/lib/clsx";
+
+const META_ICONS: Record<string, React.ComponentType<any>> = {
+  Building2,
+  Landmark,
+  Home,
+  CreditCard,
+  Shield,
+  Coins,
+};
 
 export function UnderlyingsBreakdown() {
   const { data, isLoading } = useVaultSnapshot();
@@ -45,6 +55,8 @@ export function UnderlyingsBreakdown() {
             {underlyings.map((u) => {
               const redeem = Number(u.redeemValueUsdc);
               const pct = totalAssets > 0 ? (redeem / totalAssets) * 100 : 0;
+              const meta = lookupRwaMeta(u.address);
+              const Icon = meta ? META_ICONS[meta.iconName] ?? Coins : Coins;
               return (
                 <li key={u.address} className="py-3 first:pt-0 last:pb-0">
                   <div className="flex items-center justify-between gap-3 mb-2">
@@ -55,6 +67,17 @@ export function UnderlyingsBreakdown() {
                           {u.name}
                         </span>
                       </p>
+                      {meta && (
+                        <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                          <span className="inline-flex items-center gap-1 rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-[0.06em] text-text-muted">
+                            <Icon size={10} strokeWidth={1.5} />
+                            {meta.category}
+                          </span>
+                          <span className="text-[10px] text-text-subtle leading-tight max-w-[320px]">
+                            {meta.description}
+                          </span>
+                        </div>
+                      )}
                       <p className="text-[11px] mt-0.5">
                         <Address address={u.address} />
                       </p>

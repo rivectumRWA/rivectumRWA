@@ -16,6 +16,8 @@ web/.next/
 # session / agent scratch
 .sisyphus/
 .playwright-mcp/
+.copilot-stats.json
+git-push/
 
 # design / review artifacts (regeneratable)
 dashboard-*.png

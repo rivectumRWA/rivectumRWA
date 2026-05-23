@@ -11,6 +11,7 @@ import {
   DEMO_TOTAL_SUPPLY,
   DEMO_UNDERLYING_LIST,
 } from "@/lib/demo";
+import { authenticateRequest } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

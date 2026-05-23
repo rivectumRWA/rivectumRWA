@@ -8,6 +8,7 @@ import { Card, CardHeader } from "@/components/ui/Card";
 import { VaultStateGrid } from "@/components/vault/VaultStateGrid";
 import { UnderlyingsBreakdown } from "@/components/vault/UnderlyingsBreakdown";
 import { PreviewSimulator } from "@/components/vault/PreviewSimulator";
+import { YieldLeaderboard } from "@/components/vault/YieldLeaderboard";
 import { VaultAbiTable } from "@/components/vault/VaultAbiTable";
 import { Address } from "@/components/vault/AddressLink";
 import { useVaultSnapshot } from "@/lib/useVaultSnapshot";
@@ -36,6 +37,29 @@ export default function VaultPage() {
               <UnderlyingsBreakdown />
             </div>
             <PreviewSimulator />
+          </section>
+
+          <SectionLabel title="yield" />
+          <section className="mt-3 grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
+            <div className="lg:col-span-2">
+              <YieldLeaderboard />
+            </div>
+            <Card compact>
+              <p className="text-sm text-text-muted leading-6">
+                <span className="font-medium text-text">how apy works</span>
+                <br />
+                the agent probes each underlying vault&apos;s{" "}
+                <code className="text-[11px] font-mono bg-surface-muted px-1 rounded">
+                  convertToAssets(1e18)
+                </code>
+                {" "}— a read-only call that estimates how many USDC you get per
+                share deposited. higher values signal stronger returns.
+              </p>
+              <p className="mt-3 text-xs text-text-subtle leading-5">
+                this is a naive proxy. production would track share-price
+                velocity (dw/dt) over rolling windows for a true annualized rate.
+              </p>
+            </Card>
           </section>
 
           <SectionLabel title="reference" />

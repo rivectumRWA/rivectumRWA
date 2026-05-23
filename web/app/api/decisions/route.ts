@@ -2,9 +2,13 @@ import { NextResponse } from "next/server";
 import Database from "better-sqlite3";
 import path from "node:path";
 import fs from "node:fs";
+import { authenticateRequest } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+type UiDecisionStatus = "success" | "failed" | "pending";
+type DbDecisionStatus = "confirmed" | "failed" | "submitted";
 
 interface Row {
   id: number;
@@ -17,9 +21,16 @@ interface Row {
   error_msg: string | null;
 }
 
-const ALLOWED_STATUSES = new Set(["success", "failed", "pending"]);
+const UI_TO_DB_STATUS: Record<UiDecisionStatus, DbDecisionStatus> = {
+  success: "confirmed",
+  failed: "failed",
+  pending: "submitted",
+};
 
 export async function GET(req: Request) {
+  const auth = await authenticateRequest(req);
+  if (auth instanceof Response) return auth;
+
   const url = new URL(req.url);
   const status = url.searchParams.get("status");
   const limitParam = url.searchParams.get("limit");
@@ -36,11 +47,10 @@ export async function GET(req: Request) {
   try {
     const db = new Database(dbPath, { readonly: true, fileMustExist: true });
     try {
-      const where =
-        status && ALLOWED_STATUSES.has(status) ? "WHERE status = ?" : "";
+      const dbStatus = toDbStatus(status);
+      const where = dbStatus ? "WHERE status = ?" : "";
       const sql = `SELECT id, ts, intent_hash, nonce, allocations_json, tx_hash, status, error_msg FROM decisions ${where} ORDER BY id DESC LIMIT ?`;
-      const args =
-        status && ALLOWED_STATUSES.has(status) ? [status, limit] : [limit];
+      const args = dbStatus ? [dbStatus, limit] : [limit];
       const rows = db.prepare(sql).all(...args) as Row[];
       return NextResponse.json(
         rows.map((r) => ({
@@ -50,7 +60,7 @@ export async function GET(req: Request) {
           nonce: r.nonce,
           allocationsJson: r.allocations_json,
           txHash: r.tx_hash,
-          status: r.status,
+          status: toUiStatus(r.status),
           errorMsg: r.error_msg,
         }))
       );
@@ -66,4 +76,18 @@ function clampLimit(v: string | null): number {
   const n = v ? Number(v) : 50;
   if (!Number.isFinite(n) || n <= 0) return 50;
   return Math.min(Math.floor(n), 500);
+}
+
+function toDbStatus(status: string | null): DbDecisionStatus | null {
+  if (!status) return null;
+  if (status === "success" || status === "failed" || status === "pending") {
+    return UI_TO_DB_STATUS[status];
+  }
+  return null;
+}
+
+function toUiStatus(status: string): UiDecisionStatus {
+  if (status === "confirmed") return "success";
+  if (status === "submitted") return "pending";
+  return "failed";
 }

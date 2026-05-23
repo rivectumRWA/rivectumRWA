@@ -71,7 +71,7 @@ export async function GET(req: Request) {
 }
 
 function demoPreview(assets: string, shares: string): PreviewResponse {
-  // Demo: ~1.0 share-price, sub-bps slippage so deposit shares ≈ assets, redeem ≈ shares
+  // Demo: ~1.0 share-price, sub-bps slippage so deposit shares approx assets, redeem approx shares
   const a = Number(assets);
   const s = Number(shares);
   return {

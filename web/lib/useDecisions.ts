@@ -1,5 +1,8 @@
 "use client";
 import useSWR from "swr";
+import { usePrivy } from "@privy-io/react-auth";
+
+export type DecisionStatus = "success" | "failed" | "pending";
 
 export interface Decision {
   id: number;
@@ -8,17 +11,24 @@ export interface Decision {
   nonce: number;
   allocationsJson: string;
   txHash: string | null;
-  status: string;
+  status: DecisionStatus;
   errorMsg: string | null;
 }
 
-const fetcher = (url: string) =>
-  fetch(url).then((r) => {
-    if (!r.ok) throw new Error(`decisions ${r.status}`);
-    return r.json() as Promise<Decision[]>;
-  });
+export function useDecisions(
+  params: { status?: DecisionStatus | "all"; limit?: number } = {},
+) {
+  const { getAccessToken } = usePrivy();
 
-export function useDecisions(params: { status?: string; limit?: number } = {}) {
+  const fetcher = async (url: string): Promise<Decision[]> => {
+    const token = await getAccessToken();
+    const headers: Record<string, string> = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const r = await fetch(url, { headers });
+    if (!r.ok) throw new Error(`decisions ${r.status}`);
+    return r.json();
+  };
+
   const qs = new URLSearchParams();
   if (params.status && params.status !== "all") qs.set("status", params.status);
   if (params.limit) qs.set("limit", String(params.limit));

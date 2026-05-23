@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import useSWR from "swr";
+import { usePrivy } from "@privy-io/react-auth";
 import { ArrowDownToLine, ArrowUpFromLine, Calculator } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -12,15 +13,19 @@ interface PreviewData {
   previewRedeemAssets: string;
 }
 
-const fetcher = (url: string) =>
-  fetch(url).then((r) => {
-    if (!r.ok) throw new Error(`preview ${r.status}`);
-    return r.json() as Promise<PreviewData>;
-  });
-
 export function PreviewSimulator() {
   const [assets, setAssets] = useState("100");
   const [shares, setShares] = useState("100");
+  const { getAccessToken } = usePrivy();
+
+  const fetcher = async (url: string): Promise<PreviewData> => {
+    const token = await getAccessToken();
+    const headers: Record<string, string> = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const r = await fetch(url, { headers });
+    if (!r.ok) throw new Error(`preview ${r.status}`);
+    return r.json();
+  };
 
   const params = new URLSearchParams({
     assets: assets || "0",

@@ -1,6 +1,9 @@
 "use client";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { MobileTopBar } from "@/components/layout/MobileTopBar";
+import { AgentHealthBadge } from "@/components/layout/AgentHealthBadge";
+import { RebalanceToast } from "@/components/layout/RebalanceToast";
+import { SerraCopilot } from "@/components/layout/SerraCopilot";
 import { KpiStrip } from "@/components/KpiStrip";
 import { DepositCard } from "@/components/DepositCard";
 import { WithdrawCard } from "@/components/WithdrawCard";
@@ -23,7 +26,13 @@ export default function Home() {
       <div className="flex-1 min-w-0 flex flex-col">
         <MobileTopBar />
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 lg:py-8 max-w-[1280px] w-full mx-auto">
+          <RebalanceToast />
+          <SerraCopilot />
           <PageHeader />
+
+          <div className="mt-4">
+            <AgentHealthBadge />
+          </div>
 
           <div className="mt-5">
             <KpiStrip />
@@ -95,12 +104,13 @@ function PageHeader() {
           F-001 · UNAUDITED DEMO
         </Badge>
       </div>
-      <h1 className="text-3xl sm:text-[34px] lg:text-[40px] font-bold tracking-tight lowercase leading-[1.05]">
-        agent rwa vault
+      <h1 className="text-3xl sm:text-[34px] lg:text-[40px] font-bold tracking-tight leading-[1.05]">
+        SerraRWA
       </h1>
       <p className="text-sm text-text-muted max-w-[60ch]">
-        Off-chain TS agent rebalances an ERC-4626 USDC vault across whitelisted
-        underlying vaults via signed intents. Read-only without a connected wallet.
+        Autonomous RWA allocation protocol: an off-chain TS agent rebalances an
+        ERC-4626 USDC vault across whitelisted underlying vaults via signed
+        intents. Read-only without a connected wallet.
       </p>
     </header>
   );
