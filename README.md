@@ -58,6 +58,15 @@ Agent cron loop ──► checks TVL every 6h ──► rebalances if drift > 5%
       Architecture docs, UI overview, backend specs, environment reference
     </td>
   </tr>
+  <tr>
+    <td width="50%">
+      <a href="https://github.com/rivectumRWA/docs">
+        <strong>📖 Docs</strong>
+      </a><br>
+      User guides, security overview, tutorials — written for everyone
+    </td>
+    <td></td>
+  </tr>
 </table>
 
 ### 🧪 Status
