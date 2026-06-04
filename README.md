@@ -17,59 +17,66 @@
 
 ---
 
-### 🔭 What is RivectumRWA?
+### 🔗 What is RivectumRWA?
 
 RivectumRWA is an **autonomous allocation protocol** that rebalances tokenized US Treasuries & ETH on **Base Sepolia** using ERC-4626 vaults and an on-chain agent. Think: automated yield strategy that runs itself.
 
-### ⚙️ How It Works
+#### ⚘️ How It Works
 
 ```
-User deposits USDC ──► ERC-4626 Vault ──► 60% US Treasuries (RWA)
-                                        └─► 40% ETH (Crypto)
-                                        
-Agent cron loop ──► checks TVL every 6h ──► rebalances if drift > 5%
-                                        └─► logs decisions to SQLite
+
+User deposits USDC → ERC-4626 Vault → 60% US Treasuries (RWA)
+                                    → 40% ETH (Crypto)
+Agent cron loop → checks TVL every 6h → rebalances if drift > 5%
+                                    → logs decisions to SQLite
 ```
 
-### 🧱 Architecture
+### 🏨 Architecture
 
 | Layer | Stack |
-|-------|-------|
+|-------|--------|
 | Smart Contracts | Solidity 0.8.24 · Foundry · OpenZeppelin ERC-4626 · Solady |
 | Agent | Bun + TypeScript · viem · Drizzle + SQLite |
 | Dashboard | Next.js 15 · Reown AppKit 1.7.19 · wagmi · Tailwind CSS 4 |
 | CLI | Bun + TypeScript · agent/user namespaces |
 | Infra | PM2 · Nginx · VPS (109.199.103.135) |
 
-### 📂 Repositories
+### 📦 Repositories
 
 <table>
   <tr>
-    <td width="50%">
+    <td width="33%">
       <a href="https://github.com/rivectumRWA/INFRA">
-        <strong>🏗️ INFRA</strong>
+        <strong>🏨 INFRA</strong>
       </a><br>
       Architecture docs, UI overview, backend specs, environment reference
     </td>
-    <td width="50%">
+    <td width="33%">
       <a href="https://github.com/rivectumRWA/docs">
-        <strong>📖 Docs</strong>
+        <strong>👖 Docs</strong>
       </a><br>
       User guides, security overview, tutorials — written for everyone
+    </td>
+    <td width="33%">
+      <a href="https://github.com/rivectumRWA/rivectum-cli">
+        <strong>⌈️ CLI</strong>
+      </a><br>
+      Command-line tool for agent rebalance & user portfolio management
     </td>
   </tr>
 </table>
 
-### 🧪 Status
+### 📊 Status
 
 | Component | Status |
-|-----------|--------|
-| Vault.sol (ERC-4626) | ✅ 10 tests passing |
-| Reown AppKit auth | ✅ Integrated |
-| VPS + PM2 + Nginx | ✅ Deployed |
-| Agent rebalance loop | ✅ Running |
-| Base Sepolia contracts | 🚧 Deploy pending |
-| Demo mode | 🚧 `NEXT_PUBLIC_DEMO=true` |
+|------------|--------|
+| Vault.sol (ERC-4626) | ℅ 10 tests passing |
+| Reown AppKit auth | ℅ Integrated |
+| VPS + PM2 + Nginx | ℅ Deployed |
+| Agent rebalance loop | ℅ Running |
+| CLI v0.1.0 | ℅ Published |
+| Base Sepolia contracts | 🔜 Deploy pending |
+| Demo mode | 🔜 `NEXT_PUBLIC_DEMO=true` |
 
 ### 🤝 Contributing
 
@@ -78,6 +85,5 @@ Internal project — reach out via [X](https://x.com/rivectum) or open an issue.
 ---
 
 <p align="center">
-  <sub>Built on Base Sepolia ☁️</sub>
+  <sub>Built on Base Sepolia 🔻</sub>
 </p>
-
