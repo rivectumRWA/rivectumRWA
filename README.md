@@ -46,26 +46,17 @@ Agent cron loop ──► checks TVL every 6h ──► rebalances if drift > 5%
 <table>
   <tr>
     <td width="50%">
-      <a href="https://github.com/rivectumRWA/project">
-        <strong>📦 project</strong>
-      </a><br>
-      Monorepo — smart contracts, agent, web dashboard, CLI
-    </td>
-    <td width="50%">
       <a href="https://github.com/rivectumRWA/INFRA">
         <strong>🏗️ INFRA</strong>
       </a><br>
       Architecture docs, UI overview, backend specs, environment reference
     </td>
-  </tr>
-  <tr>
     <td width="50%">
       <a href="https://github.com/rivectumRWA/docs">
         <strong>📖 Docs</strong>
       </a><br>
       User guides, security overview, tutorials — written for everyone
     </td>
-    <td></td>
   </tr>
 </table>
 
@@ -89,3 +80,4 @@ Internal project — reach out via [X](https://x.com/rivectum) or open an issue.
 <p align="center">
   <sub>Built on Base Sepolia ☁️</sub>
 </p>
+
