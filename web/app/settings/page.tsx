@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { ContractCard } from "@/components/ContractCard";
 import { OwnerCard } from "@/components/OwnerCard";
+import { ApiKeyManager } from "@/components/settings/ApiKeyManager";
 
 export default function SettingsPage() {
   return (
@@ -22,6 +23,7 @@ export default function SettingsPage() {
               <ContractCard />
               <OwnerCard />
             </div>
+            <ApiKeyManager />
             <Card compact>
               <div className="flex items-center gap-2 pb-3 mb-4 border-b border-border">
                 <ShieldCheck size={16} strokeWidth={1.5} />

@@ -11,7 +11,6 @@ import {
   Sparkles,
   AlertTriangle,
   BarChart3,
-  ClipboardCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -40,7 +39,6 @@ const NAV: ReadonlyArray<NavItem> = [
   { id: "sep-system", separatorLabel: "system" },
   { id: "settings", label: "settings", icon: ShieldCheck, href: "/settings" },
   { id: "analytics", label: "analytics", icon: BarChart3, href: "/analytics" },
-  { id: "demo", label: "demo", icon: ClipboardCheck, href: "/demo" },
   { id: "copilot", label: "copilot", icon: Sparkles, action: copilotAction },
 ];
 
