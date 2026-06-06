@@ -1,6 +1,6 @@
-# SerraRWA — Hackathon Demo
+# RivectumRWA — Hackathon Demo
 
-SerraRWA is an autonomous RWA allocation demo on Base Sepolia. An off-chain TypeScript agent rebalances an ERC-4626 USDC vault across two ERC-4626 underlyings via signed intents, with a Next.js dashboard.
+RivectumRWA is an autonomous RWA allocation demo on Base Sepolia. An off-chain TypeScript agent rebalances an ERC-4626 USDC vault across two ERC-4626 underlyings via signed intents, with a Next.js dashboard.
 
 > ⚠️ Unaudited demo. Base Sepolia testnet only. Do not deposit real funds.
 
@@ -125,6 +125,12 @@ ECDSA (secp256k1) is used for intent signing instead of Ed25519 / DID-native sig
 - `agent/src/sign.ts` — keccak intent hash + ECDSA signer (matches `Vault._hashIntent`)
 - `web/app/page.tsx` — dashboard shell
 - `web/app/api/decisions/route.ts` — SQLite read for activity feed
+
+## Hermes Skills
+
+AI-powered agent skills for protocol explanation, user onboarding, troubleshooting, and CLI operations: [Agent-Skill Repo](https://github.com/rivectumRWA/Agent-Skill)
+
+Available skills: `rivectum-protocol` (protocol guide), `rivectum-web` (dashboard guide), `rivectum-faq` (troubleshooting), `rivectum-rwa-cli` (CLI operator).
 
 ## License
 
