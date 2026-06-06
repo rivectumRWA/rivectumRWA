@@ -45,23 +45,29 @@ Agent cron loop → checks TVL every 6h → rebalances if drift > 5%
 
 <table>
   <tr>
-    <td width="33%">
+    <td width="25%">
       <a href="https://github.com/rivectumRWA/INFRA">
         <strong>🏨 INFRA</strong>
       </a><br>
       Architecture docs, UI overview, backend specs, environment reference
     </td>
-    <td width="33%">
+    <td width="25%">
       <a href="https://github.com/rivectumRWA/docs">
         <strong>👖 Docs</strong>
       </a><br>
       User guides, security overview, tutorials — written for everyone
     </td>
-    <td width="33%">
+    <td width="25%">
       <a href="https://github.com/rivectumRWA/rivectum-cli">
         <strong>⌈️ CLI</strong>
       </a><br>
       Command-line tool for agent rebalance & user portfolio management
+    </td>
+    <td width="25%">
+      <a href="https://github.com/rivectumRWA/Agent-Skill/tree/main/Hermes">
+        <strong>🤖 Hermes Skills</strong>
+      </a><br>
+      AI agent skills: protocol guide, web dashboard, FAQ troubleshooting, CLI operator
     </td>
   </tr>
 </table>
