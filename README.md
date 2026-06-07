@@ -1,141 +1,106 @@
-# RivectumRWA — Hackathon Demo
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rivectumRWA/INFRA/master/image.png">
+    <img alt="RivectumRWA" src="https://raw.githubusercontent.com/rivectumRWA/INFRA/master/image.png" width="600">
+  </picture>
+</p>
 
-RivectumRWA is an autonomous RWA allocation demo on Base Sepolia. An off-chain TypeScript agent rebalances an ERC-4626 USDC vault across two ERC-4626 underlyings via signed intents, with a Next.js dashboard.
+<p align="center">
+  <strong>Autonomous Real-World Asset Allocation on Base</strong>
+</p>
 
-> ⚠️ Unaudited demo. Base Sepolia testnet only. Do not deposit real funds.
+<p align="center">
+  <a href="https://rivectum.xyz"><img src="https://img.shields.io/badge/Website-rivectum.xyz-6366f1?style=for-the-badge&logo=safari&logoColor=white" alt="Website"></a>
+  <a href="https://app.rivectum.xyz"><img src="https://img.shields.io/badge/dApp-app.rivectum.xyz-10b981?style=for-the-badge&logo=vercel&logoColor=white" alt="dApp"></a>
+  <a href="https://x.com/rivectum"><img src="https://img.shields.io/badge/X-@rivectum-000000?style=for-the-badge&logo=x&logoColor=white" alt="X"></a>
+</p>
 
-## What's in the box
+---
+
+### 🔗 What is RivectumRWA?
+
+RivectumRWA is an **autonomous allocation protocol** that rebalances tokenized US Treasuries & ETH on **Base Sepolia** using ERC-4626 vaults and an on-chain agent. Think: automated yield strategy that runs itself.
+
+#### ⚘️ How It Works
 
 ```
-contracts/   Foundry workspace — Vault.sol, Deploy.s.sol, 10 unit tests
-agent/       Bun + TypeScript service — viem, drizzle, sqlite, cron loop
-web/         Next.js 15 dashboard — wagmi + RainbowKit, deposit/withdraw/feed
-docs/superpowers/specs/   Design spec
-plan.md      18-task implementation plan (TDD)
+
+User deposits USDC → ERC-4626 Vault → 60% US Treasuries (RWA)
+                                    → 40% ETH (Crypto)
+Agent cron loop → checks TVL every 6h → rebalances if drift > 5%
+                                    → logs decisions to SQLite
 ```
 
-## Architecture
+### 🏨 Architecture
 
-1. **User** deposits USDC → receives ERC-4626 shares from `Vault`.
-2. **Agent** (off-chain Bun service) periodically:
-   - probes simulated APY of each whitelisted ERC-4626 underlying;
-   - picks an allocation (60/40 split, 60 % cap per asset);
-   - signs an `Intent { nonce, deadline, allocations }` with its EOA key;
-   - calls `Vault.rebalance(intent, sig)`.
-3. **Vault** verifies ECDSA signature against the configured `agentDid`, redeems all underlyings, and re-deposits per the new bps split.
-4. **Dashboard** reads on-chain state via wagmi and the agent's decision log via `/api/decisions` (SQLite).
+| Layer | Stack |
+|-------|--------|
+| Smart Contracts | Solidity 0.8.24 · Foundry · OpenZeppelin ERC-4626 · Solady |
+| Agent | Bun + TypeScript · viem · Drizzle + SQLite |
+| Dashboard | Next.js 15 · Reown AppKit 1.7.19 · wagmi · Tailwind CSS 4 |
+| CLI | Bun + TypeScript · agent/user namespaces |
+| Infra | PM2 · Nginx · VPS (109.199.103.135) |
 
-## Prerequisites
+### 📦 Repositories
 
-- [Foundry](https://book.getfoundry.sh/) (`forge`)
-- [Bun](https://bun.sh/) ≥ 1.3
-- Node.js ≥ 20
-- pnpm ≥ 10
-- Base Sepolia RPC URL (e.g. `https://sepolia.base.org`)
-- A funded EOA on Base Sepolia (deployer)
-- A second EOA — its address becomes the agent DID, its private key signs intents
+<table>
+  <tr>
+    <td width="25%">
+      <a href="https://github.com/rivectumRWA/docs">
+        <strong>👖 Docs</strong>
+      </a><br>
+      User guides, security overview, tutorials — written for everyone
+    </td>
+    <td width="25%">
+      <a href="https://github.com/rivectumRWA/INFRA">
+        <strong>🏨 INFRA</strong>
+      </a><br>
+      Architecture docs, UI overview, backend specs, environment reference
+    </td>
+    <td width="25%">
+      <a href="https://github.com/rivectumRWA/rivectum-cli">
+        <strong>⌈️ CLI</strong>
+      </a><br>
+      Command-line tool for agent rebalance & user portfolio management
+    </td>
+    <td width="25%">
+      <a href="https://github.com/rivectumRWA/Rivectum-SDK">
+        <strong>📦 SDK</strong>
+      </a><br>
+      TypeScript SDK — @rivectum/user-sdk, @rivectum/developer-sdk, @rivectum/bot-sdk
+    </td>
+  </tr>
+  <tr>
+    <td width="25%">
+      <a href="https://github.com/rivectumRWA/Agent-Skill/tree/main/Hermes">
+        <strong>🤖 Hermes Skills</strong>
+      </a><br>
+      AI agent skills: protocol guide, web dashboard, FAQ troubleshooting, CLI operator
+    </td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
 
-## 1. Deploy contracts
+### 📊 Status
 
-```bash
-cd contracts
-cp .env.example .env
-# Fill: DEPLOYER_PRIVATE_KEY, AGENT_DID_ADDRESS, USDC_ADDRESS,
-#       UNDERLYING_1, UNDERLYING_2, BASE_SEPOLIA_RPC_URL
-forge build
-forge test -vv
-forge script script/Deploy.s.sol --rpc-url base_sepolia --broadcast
-```
+| Component | Status |
+|------------|--------|
+| Vault.sol (ERC-4626) | ℅ 10 tests passing |
+| Reown AppKit auth | ℅ Integrated |
+| VPS + PM2 + Nginx | ℅ Deployed |
+| Agent rebalance loop | ℅ Running |
+| CLI v0.1.0 | ℅ Published |
+| Base Sepolia contracts | 🔜 Deploy pending |
+| Demo mode | 🔜 `NEXT_PUBLIC_DEMO=true` |
 
-Note the deployed `Vault` address from the script log.
+### 🤝 Contributing
 
-> Pick two real ERC-4626 vaults on Base Sepolia for the underlyings. If none are deployed, deploy two of `MockERC4626` from `contracts/test/mocks/` first and use those addresses.
+Internal project — reach out via [X](https://x.com/rivectum) or open an issue.
 
-## 2. Run the agent
+---
 
-```bash
-cd ../agent
-cp .env.example .env
-# Fill: VAULT_ADDRESS, USDC_ADDRESS, UNDERLYING_1, UNDERLYING_2,
-#       AGENT_PRIVATE_KEY, RPC_URL
-bun install
-bun test          # 8 tests pass
-bun run dev       # cron loop, default 5 min interval
-```
-
-Adjust frequency via `REBALANCE_INTERVAL_MS`.
-
-## 3. Run the dashboard
-
-```bash
-cd ../web
-cp .env.example .env.local
-# Fill: NEXT_PUBLIC_VAULT_ADDRESS, NEXT_PUBLIC_USDC_ADDRESS,
-#       NEXT_PUBLIC_RPC_URL, NEXT_PUBLIC_WC_PROJECT_ID,
-#       AGENT_DB_PATH (defaults to ../agent/agent.db)
-pnpm install
-pnpm build
-pnpm dev
-```
-
-Open <http://localhost:3000>.
-
-## End-to-end demo flow
-
-1. Connect wallet to Base Sepolia.
-2. Acquire test USDC from the [Circle faucet](https://faucet.circle.com/).
-3. Deposit 100 USDC through the dashboard.
-4. Wait up to one rebalance interval — agent picks up new balance, signs an intent, submits `rebalance`.
-5. Refresh the dashboard — allocation list and activity feed update with a new entry linking to BaseScan.
-6. Withdraw 40 USDC — confirm USDC balance returns.
-
-## Test commands
-
-```bash
-# Contracts
-cd contracts && forge test -vv
-
-# Agent
-cd agent && bun test
-
-# Web
-cd web && pnpm exec tsc --noEmit && pnpm build
-```
-
-## Deviation from spec
-
-ECDSA (secp256k1) is used for intent signing instead of Ed25519 / DID-native signatures, so the on-chain check is a single `ecrecover`. See [§10 of the design spec](docs/superpowers/specs/2026-05-21-agent-rwa-vault-design.md#10-deviations).
-
-## Acceptance checklist
-
-- [ ] Contracts deployed to Base Sepolia
-- [ ] Agent rebalances within one interval of a deposit
-- [ ] Dashboard shows allocation pie and activity feed
-- [ ] All 10 Foundry tests pass
-- [ ] All 8 agent unit tests pass
-- [ ] `pnpm build` clean in `web/`
-- [ ] README setup reproducible from a fresh clone
-
-## Project layout
-
-- `contracts/src/Vault.sol` — ERC-4626 + signed-intent rebalance executor
-- `contracts/script/Deploy.s.sol` — single-shot Base Sepolia deploy
-- `agent/src/agent.ts` — cron loop entrypoint
-- `agent/src/strategy.ts` — allocation picker (60/40, 60 % cap)
-- `agent/src/sign.ts` — keccak intent hash + ECDSA signer (matches `Vault._hashIntent`)
-- `web/app/page.tsx` — dashboard shell
-- `web/app/api/decisions/route.ts` — SQLite read for activity feed
-
-## Repositories
-
-| Repo | Description |
-|---|---|
-| [docs](https://github.com/rivectumRWA/docs) | Full documentation |
-| [INFRA](https://github.com/rivectumRWA/INFRA) | Infrastructure, branding, deployment configs |
-| [rivectum-cli](https://github.com/rivectumRWA/rivectum-cli) | CLI tools for agent + user operations |
-| [Rivectum-SDK](https://github.com/rivectumRWA/Rivectum-SDK) | TypeScript SDK (`@rivectum/user-sdk`, `@rivectum/developer-sdk`, `@rivectum/bot-sdk`) |
-| [Agent-Skill](https://github.com/rivectumRWA/Agent-Skill) | AI-powered skills — `rivectum-protocol`, `rivectum-web`, `rivectum-faq`, `rivectum-rwa-cli` |
-
-## License
-
-MIT (demo).
+<p align="center">
+  <sub>Built on Base Sepolia 🔻</sub>
+</p>
