@@ -126,11 +126,15 @@ ECDSA (secp256k1) is used for intent signing instead of Ed25519 / DID-native sig
 - `web/app/page.tsx` — dashboard shell
 - `web/app/api/decisions/route.ts` — SQLite read for activity feed
 
-## Hermes Skills
+## Repositories
 
-AI-powered agent skills for protocol explanation, user onboarding, troubleshooting, and CLI operations: [Agent-Skill Repo](https://github.com/rivectumRWA/Agent-Skill)
-
-Available skills: `rivectum-protocol` (protocol guide), `rivectum-web` (dashboard guide), `rivectum-faq` (troubleshooting), `rivectum-rwa-cli` (CLI operator).
+| Repo | Description |
+|---|---|
+| [docs](https://github.com/rivectumRWA/docs) | Full documentation |
+| [INFRA](https://github.com/rivectumRWA/INFRA) | Infrastructure, branding, deployment configs |
+| [rivectum-cli](https://github.com/rivectumRWA/rivectum-cli) | CLI tools for agent + user operations |
+| [Rivectum-SDK](https://github.com/rivectumRWA/Rivectum-SDK) | TypeScript SDK (`@rivectum/user-sdk`, `@rivectum/developer-sdk`, `@rivectum/bot-sdk`) |
+| [Agent-Skill](https://github.com/rivectumRWA/Agent-Skill) | AI-powered skills — `rivectum-protocol`, `rivectum-web`, `rivectum-faq`, `rivectum-rwa-cli` |
 
 ## License
 
